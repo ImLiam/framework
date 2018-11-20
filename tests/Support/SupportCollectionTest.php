@@ -2663,6 +2663,20 @@ class SupportCollectionTest extends TestCase
         $collection = new Collection([1, 2, 3]);
         $this->assertNull($collection->get(null));
     }
+
+    public function testCanGetLoopVariables()
+    {
+        $filtered = collect([1, 2, 3, 4, 5, 6, 7, 8, 9, 10])
+            ->filter(function (int $item) {
+                if ($this->loop->first) {
+                    return true;
+                }
+
+                return $item % 2 === 0;
+            })->values()->toArray();
+
+        $this->assertSame([1, 2, 4, 6, 8, 10], $filtered);
+    }
 }
 
 class TestSupportCollectionHigherOrderItem
